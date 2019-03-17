@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>rgb.asm</title>
+<style type="text/css">
+/* highlight theme: Emacs Editor */
+body.hl	{ background-color:#ffffff; }
+pre.hl	{ color:#000000; background-color:#ffffff; font-size:10pt; font-family:'Consolas';}
+.hl.num { color:#000000; }
+.hl.esc { color:#ff00ff; }
+.hl.str { color:#bd8d8b; }
+.hl.pps { color:#bd8d8b; }
+.hl.slc { color:#ac2020; font-style:italic; }
+.hl.com { color:#ac2020; font-style:italic; }
+.hl.ppc { color:#000000; }
+.hl.opt { color:#000000; }
+.hl.ipl { color:#ff00ff; }
+.hl.lin { color:#555555; }
+.hl.kwa { color:#9c20ee; font-weight:bold; }
+.hl.kwb { color:#208920; }
+.hl.kwc { color:#0000ff; }
+.hl.kwd { color:#000000; }
+</style>
+</head>
+<body class="hl">
+<pre class="hl"><span class="hl slc">; &apos;rgb.png&apos; (78 bytes)</span>
+<span class="hl slc">; MD5:    16ea7bf3d2646deffc7a4e6677ba77d0</span>
+<span class="hl slc">; SHA1:   72c726c643d9cb4f883d519203be9d831a4dedc0</span>
+<span class="hl slc">; SHA256: 39f28e794c8c011947341f23fb4b3c4d3c7744886579c4f86276f9b4df946177</span>
+
+<span class="hl slc">; directives ===================================================================</span>
+
+<span class="hl opt">[</span>map symbols symbols.map<span class="hl opt">]</span>
+
+<span class="hl slc">; definitions ==================================================================</span>
+
+<span class="hl opt">%</span><span class="hl kwa">macro</span> ddbe <span class="hl num">1</span>
+  <span class="hl kwa">db</span> <span class="hl opt">(%</span><span class="hl num">1</span><span class="hl opt">&gt;&gt;</span><span class="hl num">8</span><span class="hl opt">*</span><span class="hl num">3</span><span class="hl opt">) &amp;</span> <span class="hl num">0</span>ffh
+  <span class="hl kwa">db</span> <span class="hl opt">(%</span><span class="hl num">1</span><span class="hl opt">&gt;&gt;</span><span class="hl num">8</span><span class="hl opt">*</span><span class="hl num">2</span><span class="hl opt">) &amp;</span> <span class="hl num">0</span>ffh
+  <span class="hl kwa">db</span> <span class="hl opt">(%</span><span class="hl num">1</span><span class="hl opt">&gt;&gt;</span><span class="hl num">8</span><span class="hl opt">*</span><span class="hl num">1</span><span class="hl opt">) &amp;</span> <span class="hl num">0</span>ffh
+  <span class="hl kwa">db</span> <span class="hl opt">(%</span><span class="hl num">1</span><span class="hl opt">&gt;&gt;</span><span class="hl num">8</span><span class="hl opt">*</span><span class="hl num">0</span><span class="hl opt">) &amp;</span> <span class="hl num">0</span>ffh
+<span class="hl opt">%</span>endmacro
+
+<span class="hl slc">; code =========================================================================</span>
+
+<span class="hl kwa">db</span> `<span class="hl esc">\x89</span>PNG<span class="hl esc">\r\n\x1a\n</span>`                            <span class="hl slc">; signature                    ;0000: 89 50 ..... 1a 0a (+8)</span>
+
+<span class="hl kwc">chunk1:</span>                                           <span class="hl slc">; chunk1 { //Image Header</span>
+ ddbe <span class="hl num">13</span>                                          <span class="hl slc">;  length                      ;0008: 00 00 00 0d (+4)</span>
+<span class="hl slc">;ddbe (chunk1.crc32 - chunk1.data)</span>
+
+.<span class="hl kwb">type</span> <span class="hl kwa">db</span> `IHDR`                                   <span class="hl slc">;  type                        ;000c: 49 48 44 52 (+4)</span>
+
+.<span class="hl kwc">data:</span>                                            <span class="hl slc">; Data {</span>
+  incbin <span class="hl str">&apos;rgb.png&apos;</span><span class="hl opt">,</span> <span class="hl num">0x10</span><span class="hl opt">,</span> <span class="hl num">0xd</span>                                                    <span class="hl slc">;0010: 00 00 ..... 00 00 (+13)</span>
+  <span class="hl slc">;}                                              ;   } //Data</span>
+
+.crc32 ddbe <span class="hl num">0x948283e3</span>                            <span class="hl slc">;  crc-32                      ;001d: 94 82 83 e3 (+4)</span>
+ <span class="hl slc">;&gt; chunk1.crc32=CRC32(chunk1.type,chunk1.crc32)</span>
+<span class="hl slc">;}                                                ; } //chunk</span>
+
+<span class="hl kwc">chunk2:</span>                                           <span class="hl slc">; chunk2 { //Image Data</span>
+ ddbe <span class="hl num">21</span>                                          <span class="hl slc">;  length                      ;0021: 00 00 00 15 (+4)</span>
+<span class="hl slc">;ddbe (chunk2.crc32 - chunk2.data)</span>
+
+.<span class="hl kwb">type</span> <span class="hl kwa">db</span> `IDAT`                                   <span class="hl slc">;  type                        ;0025: 49 44 41 54 (+4)</span>
+
+.<span class="hl kwc">data:</span>                                            <span class="hl slc">; Data {</span>
+  incbin <span class="hl str">&apos;rgb.png&apos;</span><span class="hl opt">,</span> <span class="hl num">0x29</span><span class="hl opt">,</span> <span class="hl num">0x15</span>                                                   <span class="hl slc">;0029: 08 1d ..... 02 fe (+21)</span>
+  <span class="hl slc">;}                                              ;   } //Data</span>
+
+.crc32 ddbe <span class="hl num">0xe93261e5</span>                            <span class="hl slc">;  crc-32                      ;003e: e9 32 61 e5 (+4)</span>
+ <span class="hl slc">;&gt; chunk2.crc32=CRC32(chunk2.type,chunk2.crc32)</span>
+<span class="hl slc">;}                                                ; } //chunk</span>
+
+<span class="hl kwc">chunk3:</span>                                           <span class="hl slc">; chunk3 { //Image End</span>
+ ddbe <span class="hl num">0</span>                                           <span class="hl slc">;  length                      ;0042: 00 00 00 00 (+4)</span>
+<span class="hl slc">;ddbe (chunk3.crc32 - chunk3.data)</span>
+
+.<span class="hl kwb">type</span> <span class="hl kwa">db</span> `IEND`                                   <span class="hl slc">;  type                        ;0046: 49 45 4e 44 (+4)</span>
+
+.<span class="hl kwc">data:</span>
+.crc32 ddbe <span class="hl num">0xae426082</span>                            <span class="hl slc">;  crc-32                      ;004a: ae 42 60 82 (+4)</span>
+ <span class="hl slc">;&gt; chunk3.crc32=CRC32(chunk3.type,chunk3.crc32)</span>
+<span class="hl slc">;}                                                ; } //chunk</span>
+
+</pre>
+</body>
+</html>
+<!--HTML generated by highlight 3.49, http://www.andre-simon.de/-->

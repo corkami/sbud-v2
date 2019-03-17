@@ -1,0 +1,116 @@
+{
+ "MD5": "16ea7bf3d2646deffc7a4e6677ba77d0", 
+ "SHA1": "72c726c643d9cb4f883d519203be9d831a4dedc0", 
+ "SHA256": "39f28e794c8c011947341f23fb4b3c4d3c7744886579c4f86276f9b4df946177", 
+ "b64contents": "iVBORw0KGgoAAAANSUhEUgAAAAMAAAABCAIAAACUgoPjAAAAFUlEQVQIHQEKAPX/AP8AAAD/AAAA/w77Av7pMmHlAAAAAElFTkSuQmCC", 
+ "fileName": "rgb.png", 
+ "length": 78, 
+ "struc": {
+  "name": "Type:PNG", 
+  "offset": 0, 
+  "subEls": [
+   {
+    "ASCII": true, 
+    "name": "signature", 
+    "offset": 0, 
+    "size": 8, 
+    "type": "magic", 
+    "value": "\\x89PNG\\r\\n\\x1a\\n"
+   }, 
+   {
+    "name": "Chunk: Image Header", 
+    "offset": 8, 
+    "subEls": [
+     {
+      "ASCII": false, 
+      "name": "length", 
+      "offset": 8, 
+      "size": 4, 
+      "type": "chunk length", 
+      "value": "13"
+     }, 
+     {
+      "ASCII": true, 
+      "name": "type", 
+      "offset": 12, 
+      "size": 4, 
+      "type": "chunk type", 
+      "value": "IHDR"
+     }, 
+     {
+      "ASCII": false, 
+      "name": "crc-32", 
+      "offset": 29, 
+      "size": 4, 
+      "type": "chunk crc32", 
+      "value": "0x948283e3"
+     }
+    ], 
+    "type": "chunk"
+   }, 
+   {
+    "name": "Chunk: Image Data", 
+    "offset": 33, 
+    "subEls": [
+     {
+      "ASCII": false, 
+      "name": "length", 
+      "offset": 33, 
+      "size": 4, 
+      "type": "chunk length", 
+      "value": "21"
+     }, 
+     {
+      "ASCII": true, 
+      "name": "type", 
+      "offset": 37, 
+      "size": 4, 
+      "type": "chunk type", 
+      "value": "IDAT"
+     }, 
+     {
+      "ASCII": false, 
+      "name": "crc-32", 
+      "offset": 62, 
+      "size": 4, 
+      "type": "chunk crc32", 
+      "value": "0xe93261e5"
+     }
+    ], 
+    "type": "chunk"
+   }, 
+   {
+    "name": "Chunk: Image End", 
+    "offset": 66, 
+    "subEls": [
+     {
+      "ASCII": false, 
+      "name": "length", 
+      "offset": 66, 
+      "size": 4, 
+      "type": "chunk length", 
+      "value": "0"
+     }, 
+     {
+      "ASCII": true, 
+      "name": "type", 
+      "offset": 70, 
+      "size": 4, 
+      "type": "chunk type", 
+      "value": "IEND"
+     }, 
+     {
+      "ASCII": false, 
+      "name": "crc-32", 
+      "offset": 74, 
+      "size": 4, 
+      "type": "chunk crc32", 
+      "value": "0xae426082"
+     }
+    ], 
+    "type": "chunk"
+   }
+  ], 
+  "type": "file"
+ }
+}

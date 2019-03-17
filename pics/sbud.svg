@@ -1,0 +1,103 @@
+<svg width="536pt" height="152pt" viewBox="0.00 0.00 536.00 152.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph1" class="graph" transform="scale(1 1) rotate(0) translate(4 148)">
+<title>_anonymous_0</title>
+<polygon fill="white" stroke="white" points="-4,5 -4,-148 533,-148 533,5 -4,5"></polygon>
+<!-- file -->
+<g id="node1" class="node"><title>file</title>
+<text text-anchor="middle" x="27" y="-67.8" font-family="monospace" font-size="14.00">file</text>
+</g>
+<!-- Dis -->
+<g id="node10" class="node"><title>Dis</title>
+<ellipse fill="none" stroke="black" cx="117" cy="-72" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="117" y="-67.8" font-family="Arial Black" font-size="14.00">Dis</text>
+</g>
+<!-- file&#45;&gt;Dis -->
+<g id="edge2" class="edge"><title>file-&gt;Dis</title>
+<path fill="none" stroke="black" d="M54.4029,-72C62.3932,-72 71.3106,-72 79.8241,-72"></path>
+<polygon fill="black" stroke="black" points="79.919,-75.5001 89.919,-72 79.919,-68.5001 79.919,-75.5001"></polygon>
+</g>
+<!-- ASM -->
+<g id="node2" class="node"><title>ASM</title>
+<text text-anchor="middle" x="207" y="-94.8" font-family="monospace" font-size="14.00">ASM</text>
+</g>
+<!-- Json -->
+<g id="node3" class="node"><title>Json</title>
+<text text-anchor="middle" x="207" y="-40.8" font-family="monospace" font-size="14.00">Json</text>
+</g>
+<!-- DatPy -->
+<g id="node14" class="node"><title>DatPy</title>
+<ellipse fill="none" stroke="black" cx="308" cy="-72" rx="37.1578" ry="18"></ellipse>
+<text text-anchor="middle" x="308" y="-67.8" font-family="Arial Black" font-size="14.00">DatPy</text>
+</g>
+<!-- Json&#45;&gt;DatPy -->
+<g id="edge8" class="edge"><title>Json-&gt;DatPy</title>
+<path fill="none" stroke="black" d="M234.011,-52.0939C243.562,-54.6988 254.632,-57.7179 265.219,-60.6053"></path>
+<polygon fill="black" stroke="black" points="264.588,-64.0608 275.156,-63.3154 266.43,-57.3075 264.588,-64.0608"></polygon>
+</g>
+<!-- DatJS -->
+<g id="node16" class="node"><title>DatJS</title>
+<ellipse fill="none" stroke="black" cx="308" cy="-18" rx="37.1578" ry="18"></ellipse>
+<text text-anchor="middle" x="308" y="-13.8" font-family="Arial Black" font-size="14.00">DatJS</text>
+</g>
+<!-- Json&#45;&gt;DatJS -->
+<g id="edge12" class="edge"><title>Json-&gt;DatJS</title>
+<path fill="none" stroke="black" d="M234.011,-37.9061C243.562,-35.3012 254.632,-32.2821 265.219,-29.3947"></path>
+<polygon fill="black" stroke="black" points="266.43,-32.6925 275.156,-26.6846 264.588,-25.9392 266.43,-32.6925"></polygon>
+</g>
+<!-- PDF -->
+<g id="node4" class="node"><title>PDF</title>
+<text text-anchor="middle" x="500" y="-13.8" font-family="monospace" font-size="14.00">PDF</text>
+</g>
+<!-- HTML -->
+<g id="node5" class="node"><title>HTML</title>
+<text text-anchor="middle" x="500" y="-121.8" font-family="monospace" font-size="14.00">HTML</text>
+</g>
+<!-- SVG -->
+<g id="node6" class="node"><title>SVG</title>
+<text text-anchor="middle" x="409" y="-13.8" font-family="monospace" font-size="14.00">SVG</text>
+</g>
+<!-- SVG&#45;&gt;PDF -->
+<g id="edge14" class="edge"><title>SVG-&gt;PDF</title>
+<path fill="none" stroke="black" d="M436.222,-18C444.551,-18 453.914,-18 462.816,-18"></path>
+<polygon fill="black" stroke="black" points="462.966,-21.5001 472.966,-18 462.966,-14.5001 462.966,-21.5001"></polygon>
+</g>
+<!-- RTF -->
+<g id="node7" class="node"><title>RTF</title>
+<text text-anchor="middle" x="500" y="-67.8" font-family="monospace" font-size="14.00">RTF</text>
+</g>
+<!-- ANSI -->
+<g id="node8" class="node"><title>ANSI</title>
+<text text-anchor="middle" x="409" y="-67.8" font-family="monospace" font-size="14.00">ANSI</text>
+</g>
+<!-- ANSI&#45;&gt;HTML -->
+<g id="edge10" class="edge"><title>ANSI-&gt;HTML</title>
+<path fill="none" stroke="black" d="M436.222,-87.9097C444.682,-93.043 454.209,-98.8236 463.237,-104.301"></path>
+<polygon fill="black" stroke="black" points="461.675,-107.447 472.04,-109.643 465.307,-101.463 461.675,-107.447"></polygon>
+</g>
+<!-- ANSI&#45;&gt;RTF -->
+<g id="edge16" class="edge"><title>ANSI-&gt;RTF</title>
+<path fill="none" stroke="black" d="M436.222,-72C444.551,-72 453.914,-72 462.816,-72"></path>
+<polygon fill="black" stroke="black" points="462.966,-75.5001 472.966,-72 462.966,-68.5001 462.966,-75.5001"></polygon>
+</g>
+<!-- Dis&#45;&gt;ASM -->
+<g id="edge4" class="edge"><title>Dis-&gt;ASM</title>
+<path fill="none" stroke="black" d="M142.046,-79.3779C150.733,-82.0432 160.737,-85.1124 170.213,-88.0199"></path>
+<polygon fill="black" stroke="black" points="169.234,-91.3804 179.82,-90.9676 171.287,-84.6883 169.234,-91.3804"></polygon>
+</g>
+<!-- Dis&#45;&gt;Json -->
+<g id="edge6" class="edge"><title>Dis-&gt;Json</title>
+<path fill="none" stroke="black" d="M142.046,-64.6221C150.733,-61.9568 160.737,-58.8876 170.213,-55.9801"></path>
+<polygon fill="black" stroke="black" points="171.287,-59.3117 179.82,-53.0324 169.234,-52.6196 171.287,-59.3117"></polygon>
+</g>
+<!-- DatPy&#45;&gt;ANSI -->
+<g id="edge9" class="edge"><title>DatPy-&gt;ANSI</title>
+<path fill="none" stroke="black" d="M345.583,-72C354.119,-72 363.207,-72 371.73,-72"></path>
+<polygon fill="black" stroke="black" points="371.771,-75.5001 381.771,-72 371.771,-68.5001 371.771,-75.5001"></polygon>
+</g>
+<!-- DatJS&#45;&gt;SVG -->
+<g id="edge13" class="edge"><title>DatJS-&gt;SVG</title>
+<path fill="none" stroke="black" d="M345.583,-18C354.119,-18 363.207,-18 371.73,-18"></path>
+<polygon fill="black" stroke="black" points="371.771,-21.5001 381.771,-18 371.771,-14.5001 371.771,-21.5001"></polygon>
+</g>
+</g>
+</svg>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>DatJs</title>
+  <style type="text/css">
+    #svg {
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<script type="text/javascript">
+const jsontest = `{
+ "b64contents": "iVBORw0KGgoAAAANSUhEUgAAAAMAAAABCAIAAACUgoPjAAAAFUlEQVQIHQEKAPX/AP8AAAD/AAAA/w77Av7pMmHlAAAAAElFTkSuQmCC",
+ "length": 78,
+ "struc": {
+  "name": "Test - PNG",
+  "offset": 0,
+  "subEls": [
+   {
+    "ASCII": true,
+    "name": "signature",
+    "offset": 0,
+    "size": 8,
+    "value": "\\\\x89PNG\\\\r\\\\n\\\\x1a\\\\n"
+   },
+   {
+    "name": "Chunk: Image Header",
+    "offset": 8,
+    "subEls": [
+     {
+      "ASCII": false,
+      "name": "length",
+      "offset": 8,
+      "size": 4,
+      "value": "13"
+     },
+     {
+      "ASCII": true,
+      "name": "type",
+      "offset": 12,
+      "size": 4,
+      "value": "IHDR"
+     },
+     {
+      "ASCII": false,
+      "name": "crc-32",
+      "offset": 29,
+      "size": 4,
+      "value": "0x948283e3"
+     }
+    ]
+   },
+   {
+    "name": "Chunk: Image Data",
+    "offset": 33,
+    "subEls": [
+     {
+      "ASCII": false,
+      "name": "length",
+      "offset": 33,
+      "size": 4,
+      "value": "21"
+     },
+     {
+      "ASCII": true,
+      "name": "type",
+      "offset": 37,
+      "size": 4,
+      "value": "IDAT"
+     },
+     {
+      "ASCII": false,
+      "name": "crc-32",
+      "offset": 62,
+      "size": 4,
+      "value": "0xe93261e5"
+     }
+    ]
+   },
+   {
+    "name": "Chunk: Image End",
+    "offset": 66,
+    "subEls": [
+     {
+      "ASCII": false,
+      "name": "length",
+      "offset": 66,
+      "size": 4,
+      "value": "0"
+     },
+     {
+      "ASCII": true,
+      "name": "type",
+      "offset": 70,
+      "size": 4,
+      "value": "IEND"
+     },
+     {
+      "ASCII": false,
+      "name": "crc-32",
+      "offset": 74,
+      "size": 4,
+      "value": "0xae426082"
+     }
+    ]
+   }
+  ]
+ }
+}`;
+
+</script>
+<script type="text/javascript" src="https://unpkg.com/albert-svg/dist/albert.js"></script>
+
+<button id="exportImage">Export to PNG</button>
+<button id="exportSvg">Export to SVG</button>
+Theme:
+<select id="theme">
+  <option value="tLightAnsi">Ansi (Light)</option>
+  <option value="tDarkAnsi">Ansi (Dark)</option>
+  <option value="tC64">Commodore 64</option>
+  <option value="tDracula">Dracula</option>
+  <option value="tShadesOfPurple">Shades Of Purple</option>
+  <option value="tSolarizedLight">Solarized (Light)</option>
+  <option value="tSolarizedDark">Solarized (Dark)</option>
+</select>
+<br/>
+<svg id="svg" viewbox="0 0 50 50"></svg>
+
+<script type="text/javascript" src="dat.js"></script>
+
+<script type="text/javascript">
+  function getSource(svg) {
+    const el = svg.cloneNode(true);
+    el.setAttribute('version', '1.1');
+    el.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'http://www.w3.org/2000/svg');
+
+    const serializer = new XMLSerializer();
+    return serializer.serializeToString(el);
+  }
+
+  function download(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 200);
+  }
+
+document.getElementById('exportImage').addEventListener('click', () => {
+    const svg = document.getElementById('svg');
+    const canvas = document.createElement('canvas');
+    canvas.width = parseFloat(window.getComputedStyle(svg).width);
+    canvas.height = parseFloat(window.getComputedStyle(svg).height);
+
+    const img = new Image();
+    img.onload = () => {
+      const ctx = canvas.getContext('2d');
+
+      // fill white background
+      ctx.fillStyle = "white";
+      ctx.fillRect(0,0, canvas.width, canvas.height);
+
+      ctx.drawImage(img, 0, 0);
+
+      canvas.toBlob((blob) => {
+        download(blob, window.location.pathname.split("/").pop() + '.png');
+      });
+    };
+
+    const data = encodeURIComponent(getSource(svg));
+    img.src = 'data:image/svg+xml,' + data;
+  });
+
+var offsetLen;
+var contents;
+document.getElementById('exportSvg').addEventListener('click', () => {
+  const svg = document.getElementById('svg');
+  const blob = new Blob([getSource(svg)], {type: 'image/svg+xml'});
+  download(blob, window.location.pathname.split("/").pop() + '.svg');
+});
+
+function refresh(){
+  console.time('datjs');
+  const rootEl = document.getElementById('svg');
+  rootEl.innerHTML = '';
+  const svg = new albert.Svg(rootEl, { allowResize: true });
+  generate(svg);
+  svg.render();
+  console.timeEnd('datjs');
+}
+
+theme = Object.values(themes)[0];
+try {
+  const themeId = localStorage.getItem('dat-theme');
+  const newTheme = themes[themeId];
+  if (newTheme) theme = newTheme;
+  
+  Array.from(document.getElementById('theme').options)
+      .find(option => option.value === themeId)
+      .selected = true;
+} catch (e) {} 
+
+document.getElementById('theme').addEventListener('change', (event) => {
+  const newId = event.target.selectedOptions[0].value;
+  theme = themes[newId];
+  try {
+    localStorage.setItem('dat-theme', newId);
+  } catch (e) {
+    console.warn('Could not save theme preference, localStorage does not work', e);
+  }
+  refresh();
+});
+
+refresh();
+
+</script>
+
+</body>
+</html>
