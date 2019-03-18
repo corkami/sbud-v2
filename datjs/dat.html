@@ -192,9 +192,10 @@ function refresh(){
   console.timeEnd('datjs');
 }
 
+const lsItem = "dat-theme";
 theme = Object.values(themes)[0];
 try {
-  const themeId = localStorage.getItem('dat-theme');
+  const themeId = localStorage.getItem(lsItem);
   const newTheme = themes[themeId];
   if (newTheme) theme = newTheme;
   
@@ -207,7 +208,7 @@ document.getElementById('theme').addEventListener('change', (event) => {
   const newId = event.target.selectedOptions[0].value;
   theme = themes[newId];
   try {
-    localStorage.setItem('dat-theme', newId);
+    localStorage.setItem(lsItem, newId);
   } catch (e) {
     console.warn('Could not save theme preference, localStorage does not work', e);
   }

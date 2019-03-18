@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Table</title>
+  <style type="text/css">
+    #svg {
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<script type="text/javascript" src="https://unpkg.com/albert-svg/dist/albert.js"></script>
+<script type="text/javascript" src="./albert.js"></script>
+
+<button id="exportImage">Export to PNG</button>
+<button id="exportSvg">Export to SVG</button>
+Theme:
+<select id="theme">
+</select>
+<br/>
+<svg id="svg" viewbox="0 0 50 50"></svg>
+
+<script type="text/javascript" src="themes.js"></script>
+<script type="text/javascript">
+const { align, expression, fill, geq, eq, fix, forEach } = albert;
+
+const tEBCDIC = [
+  [" " , "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+  ["4x", " " , " " , " " , " " , " " , " " , " " , " " , " " , " " , "¢" , "." , "<" , "(" , "+" , "\\"],
+  ["5x", "&" , " " , " " , " " , " " , " " , " " , " " , " " , " " , "!" , "$" , "*" , ")" , ";" , "¬"],
+  ["6x", "-" , "/" , " " , " " , " " , " " , " " , " " , " " , " " , " " ," ," , "%" , "_" , ">" , "?"],
+  ["7x", " " , " " , " " , " " , " " , " " , " " , " " , " " , " " , ":" , "#" , "@" , "'" , "=",  '"'],
+  ["8x", " " , "a" , "b" , "c" , "d" , "e" , "f" , "g" , "h" , "i" ,],
+  ["9x", " " , "j" , "k" , "l" , "m" , "n" , "o" , "p" , "q" , "r" ,],
+  ["Ax", " " , "~" , "s" , "t" , "u" , "v" , "w" , "x" , "y" , "z" ,],
+  ["Cx", " " , "A" , "B" , "C" , "D" , "E" , "F" , "G" , "H" , "I" ,],
+  ["Dx", " " , "J" , "K" , "L" , "M" , "N" , "O" , "P" , "Q" , "R" ,],
+  ["Ex", " " , "÷" , "S" , "T" , "U" , "V" , "W" , "X" , "Y" , "Z" ,],
+  ["Fx", "0" , "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" ,],
+  ["",   "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"]
+];
+
+const tDOSGLYPHS = [
+  ["", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+  ["0x", " ", "☺", "☻", "♥", "♦", "♣", "♠", "•", "◘", "○", "◙", "♂", "♀", "♪", "♫", "☼"],
+  ["1x", "►", "◄", "↕", "‼", "¶", "§", "▬", "↨", "↑", "↓", "→", "←", "∟", "↔", "▲", "▼"],
+  ["7x", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "⌂"],
+  ["8x", "Ç", "ü", "é", "â", "ä", "à", "å", "ç", "ê", "ë", "è", "ï", "î", "ì", "Ä", "Å"],
+  ["9x", "É", "æ", "Æ", "ô", "ö", "ò", "û", "ù", "ÿ", "Ö", "Ü", "¢", "£", "¥", "₧", "ƒ"],
+  ["Ax", "á", "í", "ó", "ú", "ñ", "Ñ", "ª", "º", "¿", "⌐", "¬", "½", "¼", "¡", "«", "»"],
+  ["Bx", "░", "▒", "▓", "│", "┤", "╡", "╢", "╖", "╕", "╣", "║", "╗", "╝", "╜", "╛", "┐"],
+  ["Cx", "└", "┴", "┬", "├", "─", "┼", "╞", "╟", "╚", "╔", "╩", "╦", "╠", "═", "╬", "╧"],
+  ["Dx", "╨", "╤", "╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀"],
+  ["Ex", "α", "ß", "Γ", "π", "Σ", "σ", "μ", "τ", "Φ", "Θ", "Ω", "δ", "∞", "φ", "ε", "∩"],
+  ["Fx", "≡", "±", "≥", "≤", "⌠", "⌡", "÷", "≈", "°", "∙", "·", "√", "ⁿ", "²", "■"],
+  ["", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+];
+
+
+  function generate(svg) {
+    const rect = new albert.Rect({
+      id: "bg",
+      fill: theme.bgColor
+    });
+    svg.constrain(fill(svg, rect));
+    svg.append(rect);
+
+    function makeTable(ll) {
+      const table = new albert.TextTable({
+            id: "fieldVal",
+            "font-family": 'Arial',
+            "font-style": "fill:" + theme.hdrColor + ";",
+            fill: theme.hdrColor
+          });
+      table.addRows(...ll);
+      table.setSpacing({ x: 0.3, y: 0 });
+      table
+        .getAllCells()
+        .alignTo("center");
+
+      table
+        .getColumn(0)
+        .setAttributes({
+          "font-family": fontHex,
+          "font-style": theme.hexColor + ";",
+          fill: theme.hexColor
+        })
+        .alignTo("right", "baseline");
+      table
+        .getRow(0)
+        .setAttributes({
+          "font-family": fontHex,
+          "font-style": theme.hexColor + ";",
+          fill: theme.hexColor
+        })
+      table
+        .getRow(table.getRowCount() - 1)
+        .setAttributes({
+          "font-family": fontHex,
+          "font-style": theme.hexColor + ";",
+          fill: theme.hexColor
+        })
+      return table;
+    }
+
+    table = makeTable(tDOSGLYPHS);
+    svg.constrain(
+      fill(svg, table, 1),
+      table.constraints(),
+    );
+    svg.append(table);
+  }
+</script>
+
+<script type="text/javascript">
+  function getSource(svg) {
+    const el = svg.cloneNode(true);
+    el.setAttribute('version', '1.1');
+    el.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'http://www.w3.org/2000/svg');
+
+    const serializer = new XMLSerializer();
+    return serializer.serializeToString(el);
+  }
+
+  function download(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 200);
+  }
+
+document.getElementById('exportImage').addEventListener('click', () => {
+    const svg = document.getElementById('svg');
+    const canvas = document.createElement('canvas');
+    canvas.width = parseFloat(window.getComputedStyle(svg).width);
+    canvas.height = parseFloat(window.getComputedStyle(svg).height);
+
+    const img = new Image();
+    img.onload = () => {
+      const ctx = canvas.getContext('2d');
+
+      // fill white background
+      ctx.fillStyle = "white";
+      ctx.fillRect(0,0, canvas.width, canvas.height);
+
+      ctx.drawImage(img, 0, 0);
+
+      canvas.toBlob((blob) => {
+        download(blob, window.location.pathname.split("/").pop() + '.png');
+      });
+    };
+
+    const data = encodeURIComponent(getSource(svg));
+    img.src = 'data:image/svg+xml,' + data;
+  });
+
+var offsetLen;
+var contents;
+document.getElementById('exportSvg').addEventListener('click', () => {
+  const svg = document.getElementById('svg');
+  const blob = new Blob([getSource(svg)], {type: 'image/svg+xml'});
+  download(blob, window.location.pathname.split("/").pop() + '.svg');
+});
+
+function refresh(){
+  console.time('datjs');
+  const rootEl = document.getElementById('svg');
+  rootEl.innerHTML = '';
+  const svg = new albert.Svg(rootEl, { allowResize: true });
+  generate(svg);
+  svg.render();
+  console.timeEnd('datjs');
+}
+
+const lsItem = 'table-theme';
+theme = Object.values(themes)[0];
+try {
+  const themeId = localStorage.getItem(lsItem);
+  const newTheme = themes[themeId];
+  if (newTheme) theme = newTheme;
+  
+  Array.from(document.getElementById('theme').options)
+      .find(option => option.value === themeId)
+      .selected = true;
+} catch (e) {} 
+
+document.getElementById('theme').addEventListener('change', (event) => {
+  const newId = event.target.selectedOptions[0].value;
+  theme = themes[newId];
+  try {
+    localStorage.setItem(lsItem, newId);
+  } catch (e) {
+    console.warn('Could not save theme preference, localStorage does not work', e);
+  }
+  refresh();
+});
+
+refresh();
+
+</script>
+
+</body>
+</html>
