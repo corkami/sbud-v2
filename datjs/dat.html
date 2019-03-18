@@ -113,22 +113,17 @@ const jsontest = `{
 
 </script>
 <script type="text/javascript" src="https://unpkg.com/albert-svg/dist/albert.js"></script>
+<script type="text/javascript" src="./albert.js"></script>
 
 <button id="exportImage">Export to PNG</button>
 <button id="exportSvg">Export to SVG</button>
 Theme:
 <select id="theme">
-  <option value="tLightAnsi">Ansi (Light)</option>
-  <option value="tDarkAnsi">Ansi (Dark)</option>
-  <option value="tC64">Commodore 64</option>
-  <option value="tDracula">Dracula</option>
-  <option value="tShadesOfPurple">Shades Of Purple</option>
-  <option value="tSolarizedLight">Solarized (Light)</option>
-  <option value="tSolarizedDark">Solarized (Dark)</option>
 </select>
 <br/>
 <svg id="svg" viewbox="0 0 50 50"></svg>
 
+<script type="text/javascript" src="themes.js"></script>
 <script type="text/javascript" src="dat.js"></script>
 
 <script type="text/javascript">
