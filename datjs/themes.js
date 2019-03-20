@@ -181,10 +181,11 @@ const tC64 = {
   name:"Commodore 64",
   hdrFont:"'Pet Me 64'",
   hexFont:"'Pet Me 64'",
+  fvFont: "'Pet Me 64'",
   hexColor: "#0088FF",
-  hdrColor: "#0088FF",
-  bgColor: "#0000AA",
-  valColors: ["#AAFFEE", "#880000", "#EEEE77", "#CC44CC", "#FFFFFF"]
+  hdrColor: "#FFFFFF",
+  bgColor:  "#0000AA",
+  valColors: ["#AAFFEE", "#880000", "#EEEE77", "#CC44CC"]
 };
 ///////////////////////////////////////////////////////////////////////////////
 
