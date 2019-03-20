@@ -179,8 +179,8 @@ White #FFFFFF
 
 const tC64 = {
   name:"Commodore 64",
-  hdrFont:'Pet Me 64',
-  hexFont:'Pet Me 64',
+  hdrFont:"'Pet Me 64'",
+  hexFont:"'Pet Me 64'",
   hexColor: "#0088FF",
   hdrColor: "#0088FF",
   bgColor: "#0000AA",
@@ -197,9 +197,6 @@ const themes = {
   tSolarizedLight,
   tSolarizedDark
 };
-const fontHeader = "'Aracne Regular', Arial";
-const fontHex = "mononoki,Consolas,monospace"; // need monospace
-const fontFieldVal = "Arial";
 
 var themeEL = document.getElementById("theme");
 for (var key in themes) {
@@ -207,4 +204,18 @@ for (var key in themes) {
   option.text = themes[key].name;
   option.setAttribute("value", key);
   themeEL.add(option);
+}
+
+const tDefault = {
+  hdrFont:"'Aracne Regular', Arial",
+  hexFont:"mononoki,Consolas,monospace",
+  fvFont: "Arial",
+}
+
+function mergeDefaults(t) {
+  const theme = Object.assign({}, tDefault, t);
+  theme.hexFont = (t.hexFont) ? t.hexFont + "," + tDefault.hexFont : tDefault.hexFont;
+  theme.hdrFont = (t.hdrFont) ? t.hdrFont + "," + tDefault.hdrFont: tDefault.hdrFont;
+  theme.fvFont  = (t.fvFont)  ? t.fvFont + "," + tDefault.fvFont: tDefault.fvFont;
+  return theme;
 }
