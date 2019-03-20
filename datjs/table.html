@@ -71,9 +71,9 @@ const tDOSGLYPHS = [
     function makeTable(ll) {
       const table = new albert.TextTable({
             id: "fieldVal",
-            "font-family": 'Arial',
-            "font-style": "fill:" + theme.hdrColor + ";",
-            fill: theme.hdrColor
+            "font-family": theme.hexFont,
+            "font-style": "fill:" + theme.hexColor + ";",
+            fill: theme.hexColor
           });
       table.addRows(...ll);
       table.setSpacing({ x: 0.3, y: 0 });
@@ -84,29 +84,29 @@ const tDOSGLYPHS = [
       table
         .getColumn(0)
         .setAttributes({
-          "font-family": fontHex,
-          "font-style": theme.hexColor + ";",
-          fill: theme.hexColor
+          "font-family": theme.hdrFont,
+          "font-style": theme.hdrColor + ";",
+          fill: theme.hdrColor
         })
         .alignTo("right", "baseline");
       table
         .getRow(0)
         .setAttributes({
-          "font-family": fontHex,
-          "font-style": theme.hexColor + ";",
-          fill: theme.hexColor
+          "font-family": theme.hdrFont,
+          "font-style": theme.hdrColor + ";",
+          fill: theme.hdrColor
         })
       table
         .getRow(table.getRowCount() - 1)
         .setAttributes({
-          "font-family": fontHex,
-          "font-style": theme.hexColor + ";",
-          fill: theme.hexColor
+          "font-family": theme.hdrFont,
+          "font-style": theme.hdrColor + ";",
+          fill: theme.hdrColor
         })
       return table;
     }
 
-    table = makeTable(tDOSGLYPHS);
+    table = makeTable(tEBCDIC);
     svg.constrain(
       fill(svg, table, 1),
       table.constraints(),
@@ -185,7 +185,7 @@ const lsItem = 'table-theme';
 theme = Object.values(themes)[0];
 try {
   const themeId = localStorage.getItem(lsItem);
-  const newTheme = themes[themeId];
+  const newTheme = mergeDefaults(themes[themeId]);
   if (newTheme) theme = newTheme;
   
   Array.from(document.getElementById('theme').options)
@@ -195,7 +195,7 @@ try {
 
 document.getElementById('theme').addEventListener('change', (event) => {
   const newId = event.target.selectedOptions[0].value;
-  theme = themes[newId];
+  theme = mergeDefaults(themes[newId]);
   try {
     localStorage.setItem(lsItem, newId);
   } catch (e) {
