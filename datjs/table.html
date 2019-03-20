@@ -59,6 +59,47 @@ const tDOSGLYPHS = [
   ["", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
 ];
 
+const tX86 = [
+  ["", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+  ["0x", "add", "add", "add", "add", "add", "add", "push", "pop", "or", "or", "or", "or", "or", "or", "push", "twobyte"],
+  ["1x", "adc", "adc", "adc", "adc", "adc", "adc", "push", "pop", "sbb", "sbb", "sbb", "sbb", "sbb", "sbb", "push", "pop"],
+  ["2x", "and", "and", "and", "and", "and", "and", "es:", "daa", "sub", "sub", "sub", "sub", "sub", "sub", "CS:", "das"],
+  ["3x", "xor", "xor", "xor", "xor", "xor", "xor", "ss:", "aaa", "cmp", "cmp", "cmp", "cmp", "cmp", "cmp", "DS:", "aas"],
+  ["4x", "inc", "inc", "inc", "inc", "inc", "inc", "inc", "inc", "dec", "dec", "dec", "dec", "dec", "dec", "dec", "dec"],
+  ["5x", "push", "push", "push", "push", "push", "push", "push", "push", "pop", "pop", "pop", "pop", "pop", "pop", "pop", "pop"],
+  ["6x", "pusha", "popa", "bound", "arpl", "FS:", "GS:", "opsize:", "adsize:", "push", "imul", "push", "imul", "insb", "insw", "outsb", "outsw"],
+  ["7x", "jo", "jno", "jb", "jnb", "jz", "jnz", "jbe", "ja", "js", "jns", "jp", "jnp", "jl", "jnl", "jle", "jnle"],
+  ["8x", "add", "add", "sub", "sub", "test", "test", "xchg", "xchg", "mov", "mov", "mov", "mov", "mov", "lea", "mov", "pop"],
+  ["9x", "nop", "xchg", "xchg", "xchg", "xchg", "xchg", "xchg", "xchg", "cbw", "cwd", "call", "wait", "pushf", "popf", "sahf", "lahf"],
+  ["Ax", "mov", "mov", "mov", "mov", "movsb", "movsw", "cmpsb", "cmpsw", "test", "test", "stosb", "stosw", "lodsb", "lodsw", "scasb", "scasw"],
+  ["Bx", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov"],
+  ["Cx", "#2", "#2", "retn", "retn", "les", "lds", "mov", "mov", "enter", "leave", "retf", "retf", "int3", "int", "into", "iret"],
+  ["Dx", "#2", "#2", "#2", "#2", "aam", "aad", "salc", "xlat", "esc", "esc", "esc", "esc", "esc", "esc", "esc", "esc"],
+  ["Ex", "loopnz", "loopz", "loop", "jcxz", "in", "in", "out", "out", "call", "jmp", "jmp", "jmp", "in", "in", "out", "out"],
+  ["Fx", "lock:", "int1", "repne:", "rep:", "hlt", "cmc", "#3", "#3", "clc", "stc", "cli", "sti", "cld", "std", "inc/dec", "inc/dec"],
+  ["", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+];
+
+const t6502 = [
+  ["", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+  ["0x", "BRK", "ORA", "KIL", "SLO", "NOP", "ORA", "ASL", "SLO", "PHP", "ORA", "ASL", "ANC", "NOP", "ORA", "ASL", "SLO"],
+  ["1x", "BPL", "ORA", "KIL", "SLO", "NOP", "ORA", "ASL", "SLO", "CLC", "ORA", "NOP", "SLO", "NOP", "ORA", "ASL", "SLO"],
+  ["2x", "JSR", "AND", "KIL", "RLA", "BIT", "AND", "ROL", "RLA", "PLP", "AND", "ROL", "ANC", "BIT", "AND", "ROL", "RLA"],
+  ["3x", "BMI", "AND", "KIL", "RLA", "NOP", "AND", "ROL", "RLA", "SEC", "AND", "NOP", "RLA", "NOP", "AND", "ROL", "RLA"],
+  ["4x", "RTI", "EOR", "KIL", "SRE", "NOP", "EOR", "LSR", "SRE", "PHA", "EOR", "LSR", "ALR", "JMP", "EOR", "LSR", "SRE"],
+  ["5x", "BVC", "EOR", "KIL", "SRE", "NOP", "EOR", "LSR", "SRE", "CLI", "EOR", "NOP", "SRE", "NOP", "EOR", "LSR", "SRE"],
+  ["6x", "RTS", "ADC", "KIL", "RRA", "NOP", "ADC", "ROR", "RRA", "PLA", "ADC", "ROR", "ARR", "JMP", "ADC", "ROR", "RRA"],
+  ["7x", "BVS", "ADC", "KIL", "RRA", "NOP", "ADC", "ROR", "RRA", "SEI", "ADC", "NOP", "RRA", "NOP", "ADC", "ROR", "RRA"],
+  ["8x", "NOP", "STA", "NOP", "SAX", "STY", "STA", "STX", "SAX", "DEY", "NOP", "TXA", "XAA", "STY", "STA", "STX", "SAX"],
+  ["9x", "BCC", "STA", "KIL", "AHX", "STY", "STA", "STX", "SAX", "TYA", "STA", "TXS", "TAS", "SHY", "STA", "SHX", "AHX"],
+  ["Ax", "LDY", "LDA", "LDX", "LAX", "LDY", "LDA", "LDX", "LAX", "TAY", "LDA", "TAX", "LAX", "LDY", "LDA", "LDX", "LAX"],
+  ["Bx", "BCS", "LDA", "KIL", "LAX", "LDY", "LDA", "LDX", "LAX", "CLV", "LDA", "TSX", "LAS", "LDY", "LDA", "LDX", "LAX"],
+  ["Cx", "CPY", "CMP", "NOP", "DCP", "CPY", "CMP", "DEC", "DCP", "INY", "CMP", "DEX", "AXS", "CPY", "CMP", "DEC", "DCP"],
+  ["Dx", "BNE", "CMP", "KIL", "DCP", "NOP", "CMP", "DEC", "DCP", "CLD", "CMP", "NOP", "DCP", "NOP", "CMP", "DEC", "DCP"],
+  ["Ex", "CPX", "SBC", "NOP", "ISC", "CPX", "SBC", "INC", "ISC", "INX", "SBC", "NOP", "SBC", "CPX", "SBC", "INC", "ISC"],
+  ["Fx", "BEQ", "SBC", "KIL", "ISC", "NOP", "SBC", "INC", "ISC", "SED", "SBC", "NOP", "ISC", "NOP", "SBC", "INC", "ISC"],
+  ["", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+];
 
   function generate(svg) {
     const rect = new albert.Rect({
@@ -106,7 +147,7 @@ const tDOSGLYPHS = [
       return table;
     }
 
-    table = makeTable(tEBCDIC);
+    table = makeTable(t6502);
     svg.constrain(
       fill(svg, table, 1),
       table.constraints(),
