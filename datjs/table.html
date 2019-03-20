@@ -27,79 +27,92 @@ Theme:
 <script type="text/javascript">
 const { align, expression, fill, geq, eq, fix, forEach } = albert;
 const _ = undefined;
-const tEBCDIC = [
-  [   _, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
-  ["4x",    _,    _,    _,    _,    _,    _,    _,    _,    _,    _, "¢" , "." , "<" , "(" , "+" , "\\"],
-  ["5x", "&" ,    _,    _,    _,    _,    _,    _,    _,    _,    _, "!" , "$" , "*" , ")" , ";" , "¬"],
-  ["6x", "-" , "/" ,    _,    _,    _,    _,    _,    _,    _,    _,    _," ," , "%" , "_" , ">" , "?"],
-  ["7x",    _,    _,    _,    _,    _,    _,    _,    _,    _,    _, ":" , "#" , "@" , "'" , "=",  '"'],
-  ["8x",    _, "a" , "b" , "c" , "d" , "e" , "f" , "g" , "h" , "i" ,],
-  ["9x",    _, "j" , "k" , "l" , "m" , "n" , "o" , "p" , "q" , "r" ,],
-  ["Ax",    _, "~" , "s" , "t" , "u" , "v" , "w" , "x" , "y" , "z" ,],
-  ["Cx",    _, "A" , "B" , "C" , "D" , "E" , "F" , "G" , "H" , "I" ,],
-  ["Dx",    _, "J" , "K" , "L" , "M" , "N" , "O" , "P" , "Q" , "R" ,],
-  ["Ex",    _, "÷" , "S" , "T" , "U" , "V" , "W" , "X" , "Y" , "Z" ,],
-  ["Fx", "0" , "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" ,],
-  [   _, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"]
-];
+const tEBCDIC = {
+  table:[
+    [   _, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+    ["4x",    _,    _,    _,    _,    _,    _,    _,    _,    _,    _, "¢" , "." , "<" , "(" , "+" , "\\"],
+    ["5x", "&" ,    _,    _,    _,    _,    _,    _,    _,    _,    _, "!" , "$" , "*" , ")" , ";" , "¬"],
+    ["6x", "-" , "/" ,    _,    _,    _,    _,    _,    _,    _,    _,    _," ," , "%" , "_" , ">" , "?"],
+    ["7x",    _,    _,    _,    _,    _,    _,    _,    _,    _,    _, ":" , "#" , "@" , "'" , "=",  '"'],
+    ["8x",    _, "a" , "b" , "c" , "d" , "e" , "f" , "g" , "h" , "i" ,],
+    ["9x",    _, "j" , "k" , "l" , "m" , "n" , "o" , "p" , "q" , "r" ,],
+    ["Ax",    _, "~" , "s" , "t" , "u" , "v" , "w" , "x" , "y" , "z" ,],
+    ["Cx",    _, "A" , "B" , "C" , "D" , "E" , "F" , "G" , "H" , "I" ,],
+    ["Dx",    _, "J" , "K" , "L" , "M" , "N" , "O" , "P" , "Q" , "R" ,],
+    ["Ex",    _, "÷" , "S" , "T" , "U" , "V" , "W" , "X" , "Y" , "Z" ,],
+    ["Fx", "0" , "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" ,],
+    [   _, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"]
+  ]
+};
 
-const tDOSGLYPHS = [
-  [   _, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
-  ["0x",   _, "☺", "☻", "♥", "♦", "♣", "♠", "•", "◘", "○", "◙", "♂", "♀", "♪", "♫", "☼"],
-  ["1x", "►", "◄", "↕", "‼", "¶", "§", "▬", "↨", "↑", "↓", "→", "←", "∟", "↔", "▲", "▼"],
-  ["7x",   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _, "⌂"],
-  ["8x", "Ç", "ü", "é", "â", "ä", "à", "å", "ç", "ê", "ë", "è", "ï", "î", "ì", "Ä", "Å"],
-  ["9x", "É", "æ", "Æ", "ô", "ö", "ò", "û", "ù", "ÿ", "Ö", "Ü", "¢", "£", "¥", "₧", "ƒ"],
-  ["Ax", "á", "í", "ó", "ú", "ñ", "Ñ", "ª", "º", "¿", "⌐", "¬", "½", "¼", "¡", "«", "»"],
-  ["Bx", "░", "▒", "▓", "│", "┤", "╡", "╢", "╖", "╕", "╣", "║", "╗", "╝", "╜", "╛", "┐"],
-  ["Cx", "└", "┴", "┬", "├", "─", "┼", "╞", "╟", "╚", "╔", "╩", "╦", "╠", "═", "╬", "╧"],
-  ["Dx", "╨", "╤", "╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀"],
-  ["Ex", "α", "ß", "Γ", "π", "Σ", "σ", "μ", "τ", "Φ", "Θ", "Ω", "δ", "∞", "φ", "ε", "∩"],
-  ["Fx", "≡", "±", "≥", "≤", "⌠", "⌡", "÷", "≈", "°", "∙", "·", "√", "ⁿ", "²", "■"],
-  [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
-];
+const tDOSGLYPHS = {
+  table:[
+    [   _, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+    ["0x",   _, "☺", "☻", "♥", "♦", "♣", "♠", "•", "◘", "○", "◙", "♂", "♀", "♪", "♫", "☼"],
+    ["1x", "►", "◄", "↕", "‼", "¶", "§", "▬", "↨", "↑", "↓", "→", "←", "∟", "↔", "▲", "▼"],
+    ["7x",   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _, "⌂"],
+    ["8x", "Ç", "ü", "é", "â", "ä", "à", "å", "ç", "ê", "ë", "è", "ï", "î", "ì", "Ä", "Å"],
+    ["9x", "É", "æ", "Æ", "ô", "ö", "ò", "û", "ù", "ÿ", "Ö", "Ü", "¢", "£", "¥", "₧", "ƒ"],
+    ["Ax", "á", "í", "ó", "ú", "ñ", "Ñ", "ª", "º", "¿", "⌐", "¬", "½", "¼", "¡", "«", "»"],
+    ["Bx", "░", "▒", "▓", "│", "┤", "╡", "╢", "╖", "╕", "╣", "║", "╗", "╝", "╜", "╛", "┐"],
+    ["Cx", "└", "┴", "┬", "├", "─", "┼", "╞", "╟", "╚", "╔", "╩", "╦", "╠", "═", "╬", "╧"],
+    ["Dx", "╨", "╤", "╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀"],
+    ["Ex", "α", "ß", "Γ", "π", "Σ", "σ", "μ", "τ", "Φ", "Θ", "Ω", "δ", "∞", "φ", "ε", "∩"],
+    ["Fx", "≡", "±", "≥", "≤", "⌠", "⌡", "÷", "≈", "°", "∙", "·", "√", "ⁿ", "²", "■"],
+    [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+  ]
+}
 
-const tX86 = [
-  [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
-  ["0x", "add", "add", "add", "add", "add", "add", "push", "pop", "or", "or", "or", "or", "or", "or", "push", "twobyte"],
-  ["1x", "adc", "adc", "adc", "adc", "adc", "adc", "push", "pop", "sbb", "sbb", "sbb", "sbb", "sbb", "sbb", "push", "pop"],
-  ["2x", "and", "and", "and", "and", "and", "and", "es:", "daa", "sub", "sub", "sub", "sub", "sub", "sub", "CS:", "das"],
-  ["3x", "xor", "xor", "xor", "xor", "xor", "xor", "ss:", "aaa", "cmp", "cmp", "cmp", "cmp", "cmp", "cmp", "DS:", "aas"],
-  ["4x", "inc", "inc", "inc", "inc", "inc", "inc", "inc", "inc", "dec", "dec", "dec", "dec", "dec", "dec", "dec", "dec"],
-  ["5x", "push", "push", "push", "push", "push", "push", "push", "push", "pop", "pop", "pop", "pop", "pop", "pop", "pop", "pop"],
-  ["6x", "pusha", "popa", "bound", "arpl", "FS:", "GS:", "opsize:", "adsize:", "push", "imul", "push", "imul", "insb", "insw", "outsb", "outsw"],
-  ["7x", "jo", "jno", "jb", "jnb", "jz", "jnz", "jbe", "ja", "js", "jns", "jp", "jnp", "jl", "jnl", "jle", "jnle"],
-  ["8x", "add", "add", "sub", "sub", "test", "test", "xchg", "xchg", "mov", "mov", "mov", "mov", "mov", "lea", "mov", "pop"],
-  ["9x", "nop", "xchg", "xchg", "xchg", "xchg", "xchg", "xchg", "xchg", "cbw", "cwd", "call", "wait", "pushf", "popf", "sahf", "lahf"],
-  ["Ax", "mov", "mov", "mov", "mov", "movsb", "movsw", "cmpsb", "cmpsw", "test", "test", "stosb", "stosw", "lodsb", "lodsw", "scasb", "scasw"],
-  ["Bx", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov"],
-  ["Cx", "#2", "#2", "retn", "retn", "les", "lds", "mov", "mov", "enter", "leave", "retf", "retf", "int3", "int", "into", "iret"],
-  ["Dx", "#2", "#2", "#2", "#2", "aam", "aad", "salc", "xlat", "esc", "esc", "esc", "esc", "esc", "esc", "esc", "esc"],
-  ["Ex", "loopnz", "loopz", "loop", "jcxz", "in", "in", "out", "out", "call", "jmp", "jmp", "jmp", "in", "in", "out", "out"],
-  ["Fx", "lock:", "int1", "repne:", "rep:", "hlt", "cmc", "#3", "#3", "clc", "stc", "cli", "sti", "cld", "std", "inc/dec", "inc/dec"],
-  [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
-];
+const tX86 = {
+  table:[
+    [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+    ["0x", "add", "add", "add", "add", "add", "add", "push", "pop", "or", "or", "or", "or", "or", "or", "push", "twobyte"],
+    ["1x", "adc", "adc", "adc", "adc", "adc", "adc", "push", "pop", "sbb", "sbb", "sbb", "sbb", "sbb", "sbb", "push", "pop"],
+    ["2x", "and", "and", "and", "and", "and", "and", "es:", "daa", "sub", "sub", "sub", "sub", "sub", "sub", "CS:", "das"],
+    ["3x", "xor", "xor", "xor", "xor", "xor", "xor", "ss:", "aaa", "cmp", "cmp", "cmp", "cmp", "cmp", "cmp", "DS:", "aas"],
+    ["4x", "inc", "inc", "inc", "inc", "inc", "inc", "inc", "inc", "dec", "dec", "dec", "dec", "dec", "dec", "dec", "dec"],
+    ["5x", "push", "push", "push", "push", "push", "push", "push", "push", "pop", "pop", "pop", "pop", "pop", "pop", "pop", "pop"],
+    ["6x", "pusha", "popa", "bound", "arpl", "FS:", "GS:", "opsize:", "adsize:", "push", "imul", "push", "imul", "insb", "insw", "outsb", "outsw"],
+    ["7x", "jo", "jno", "jb", "jnb", "jz", "jnz", "jbe", "ja", "js", "jns", "jp", "jnp", "jl", "jnl", "jle", "jnle"],
+    ["8x", "add", "add", "sub", "sub", "test", "test", "xchg", "xchg", "mov", "mov", "mov", "mov", "mov", "lea", "mov", "pop"],
+    ["9x", "nop", "xchg", "xchg", "xchg", "xchg", "xchg", "xchg", "xchg", "cbw", "cwd", "call", "wait", "pushf", "popf", "sahf", "lahf"],
+    ["Ax", "mov", "mov", "mov", "mov", "movsb", "movsw", "cmpsb", "cmpsw", "test", "test", "stosb", "stosw", "lodsb", "lodsw", "scasb", "scasw"],
+    ["Bx", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov", "mov"],
+    ["Cx", "#2", "#2", "retn", "retn", "les", "lds", "mov", "mov", "enter", "leave", "retf", "retf", "int3", "int", "into", "iret"],
+    ["Dx", "#2", "#2", "#2", "#2", "aam", "aad", "salc", "xlat", "esc", "esc", "esc", "esc", "esc", "esc", "esc", "esc"],
+    ["Ex", "loopnz", "loopz", "loop", "jcxz", "in", "in", "out", "out", "call", "jmp", "jmp", "jmp", "in", "in", "out", "out"],
+    ["Fx", "lock:", "int1", "repne:", "rep:", "hlt", "cmc", "#3", "#3", "clc", "stc", "cli", "sti", "cld", "std", "inc/dec", "inc/dec"],
+    [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+  ]
+};
 
-const t6502 = [
-  [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
-  ["0x", "BRK", "ORA", "KIL", "SLO", "NOP", "ORA", "ASL", "SLO", "PHP", "ORA", "ASL", "ANC", "NOP", "ORA", "ASL", "SLO"],
-  ["1x", "BPL", "ORA", "KIL", "SLO", "NOP", "ORA", "ASL", "SLO", "CLC", "ORA", "NOP", "SLO", "NOP", "ORA", "ASL", "SLO"],
-  ["2x", "JSR", "AND", "KIL", "RLA", "BIT", "AND", "ROL", "RLA", "PLP", "AND", "ROL", "ANC", "BIT", "AND", "ROL", "RLA"],
-  ["3x", "BMI", "AND", "KIL", "RLA", "NOP", "AND", "ROL", "RLA", "SEC", "AND", "NOP", "RLA", "NOP", "AND", "ROL", "RLA"],
-  ["4x", "RTI", "EOR", "KIL", "SRE", "NOP", "EOR", "LSR", "SRE", "PHA", "EOR", "LSR", "ALR", "JMP", "EOR", "LSR", "SRE"],
-  ["5x", "BVC", "EOR", "KIL", "SRE", "NOP", "EOR", "LSR", "SRE", "CLI", "EOR", "NOP", "SRE", "NOP", "EOR", "LSR", "SRE"],
-  ["6x", "RTS", "ADC", "KIL", "RRA", "NOP", "ADC", "ROR", "RRA", "PLA", "ADC", "ROR", "ARR", "JMP", "ADC", "ROR", "RRA"],
-  ["7x", "BVS", "ADC", "KIL", "RRA", "NOP", "ADC", "ROR", "RRA", "SEI", "ADC", "NOP", "RRA", "NOP", "ADC", "ROR", "RRA"],
-  ["8x", "NOP", "STA", "NOP", "SAX", "STY", "STA", "STX", "SAX", "DEY", "NOP", "TXA", "XAA", "STY", "STA", "STX", "SAX"],
-  ["9x", "BCC", "STA", "KIL", "AHX", "STY", "STA", "STX", "SAX", "TYA", "STA", "TXS", "TAS", "SHY", "STA", "SHX", "AHX"],
-  ["Ax", "LDY", "LDA", "LDX", "LAX", "LDY", "LDA", "LDX", "LAX", "TAY", "LDA", "TAX", "LAX", "LDY", "LDA", "LDX", "LAX"],
-  ["Bx", "BCS", "LDA", "KIL", "LAX", "LDY", "LDA", "LDX", "LAX", "CLV", "LDA", "TSX", "LAS", "LDY", "LDA", "LDX", "LAX"],
-  ["Cx", "CPY", "CMP", "NOP", "DCP", "CPY", "CMP", "DEC", "DCP", "INY", "CMP", "DEX", "AXS", "CPY", "CMP", "DEC", "DCP"],
-  ["Dx", "BNE", "CMP", "KIL", "DCP", "NOP", "CMP", "DEC", "DCP", "CLD", "CMP", "NOP", "DCP", "NOP", "CMP", "DEC", "DCP"],
-  ["Ex", "CPX", "SBC", "NOP", "ISC", "CPX", "SBC", "INC", "ISC", "INX", "SBC", "NOP", "SBC", "CPX", "SBC", "INC", "ISC"],
-  ["Fx", "BEQ", "SBC", "KIL", "ISC", "NOP", "SBC", "INC", "ISC", "SED", "SBC", "NOP", "ISC", "NOP", "SBC", "INC", "ISC"],
-  [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
-];
+const t6502 = {
+  table:[
+    [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+    ["0x", "BRK", "ORA", "KIL", "SLO", "NOP", "ORA", "ASL", "SLO", "PHP", "ORA", "ASL", "ANC", "NOP", "ORA", "ASL", "SLO"],
+    ["1x", "BPL", "ORA", "KIL", "SLO", "NOP", "ORA", "ASL", "SLO", "CLC", "ORA", "NOP", "SLO", "NOP", "ORA", "ASL", "SLO"],
+    ["2x", "JSR", "AND", "KIL", "RLA", "BIT", "AND", "ROL", "RLA", "PLP", "AND", "ROL", "ANC", "BIT", "AND", "ROL", "RLA"],
+    ["3x", "BMI", "AND", "KIL", "RLA", "NOP", "AND", "ROL", "RLA", "SEC", "AND", "NOP", "RLA", "NOP", "AND", "ROL", "RLA"],
+    ["4x", "RTI", "EOR", "KIL", "SRE", "NOP", "EOR", "LSR", "SRE", "PHA", "EOR", "LSR", "ALR", "JMP", "EOR", "LSR", "SRE"],
+    ["5x", "BVC", "EOR", "KIL", "SRE", "NOP", "EOR", "LSR", "SRE", "CLI", "EOR", "NOP", "SRE", "NOP", "EOR", "LSR", "SRE"],
+    ["6x", "RTS", "ADC", "KIL", "RRA", "NOP", "ADC", "ROR", "RRA", "PLA", "ADC", "ROR", "ARR", "JMP", "ADC", "ROR", "RRA"],
+    ["7x", "BVS", "ADC", "KIL", "RRA", "NOP", "ADC", "ROR", "RRA", "SEI", "ADC", "NOP", "RRA", "NOP", "ADC", "ROR", "RRA"],
+    ["8x", "NOP", "STA", "NOP", "SAX", "STY", "STA", "STX", "SAX", "DEY", "NOP", "TXA", "XAA", "STY", "STA", "STX", "SAX"],
+    ["9x", "BCC", "STA", "KIL", "AHX", "STY", "STA", "STX", "SAX", "TYA", "STA", "TXS", "TAS", "SHY", "STA", "SHX", "AHX"],
+    ["Ax", "LDY", "LDA", "LDX", "LAX", "LDY", "LDA", "LDX", "LAX", "TAY", "LDA", "TAX", "LAX", "LDY", "LDA", "LDX", "LAX"],
+    ["Bx", "BCS", "LDA", "KIL", "LAX", "LDY", "LDA", "LDX", "LAX", "CLV", "LDA", "TSX", "LAS", "LDY", "LDA", "LDX", "LAX"],
+    ["Cx", "CPY", "CMP", "NOP", "DCP", "CPY", "CMP", "DEC", "DCP", "INY", "CMP", "DEX", "AXS", "CPY", "CMP", "DEC", "DCP"],
+    ["Dx", "BNE", "CMP", "KIL", "DCP", "NOP", "CMP", "DEC", "DCP", "CLD", "CMP", "NOP", "DCP", "NOP", "CMP", "DEC", "DCP"],
+    ["Ex", "CPX", "SBC", "NOP", "ISC", "CPX", "SBC", "INC", "ISC", "INX", "SBC", "NOP", "SBC", "CPX", "SBC", "INC", "ISC"],
+    ["Fx", "BEQ", "SBC", "KIL", "ISC", "NOP", "SBC", "INC", "ISC", "SED", "SBC", "NOP", "ISC", "NOP", "SBC", "INC", "ISC"],
+    [_, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "xA", "xB", "xC", "xD", "xE", "xF"],
+  ],
+  categories: {
+    illegal: ["ALR", "ARR", "ANC", "AXS", "DCP", "ISC", "KIL", "NOP", "RLA", "RRA", "SAX", "SBC", "SLO", "SRE"],
+    risk:["XAA", "LAX"],
+    unstable:["AHX", "TAS", "SHY", "SHX"],
+  }
+};
 
   function generate(svg) {
     const rect = new albert.Rect({
@@ -109,14 +122,14 @@ const t6502 = [
     svg.constrain(fill(svg, rect));
     svg.append(rect);
 
-    function makeTable(ll) {
+    function makeTable(tableDef) {
       const table = new albert.TextTable({
             id: "fieldVal",
             "font-family": theme.hexFont,
             "font-style": "fill:" + theme.hexColor + ";",
             fill: theme.hexColor
           });
-      table.addRows(...ll);
+      table.addRows(...tableDef.table);
       table.setSpacing({ x: 0.3, y: theme.hexYspace });
       table
         .getAllCells()
