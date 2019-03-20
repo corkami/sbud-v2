@@ -141,7 +141,7 @@ function generate(svg) {
   function makeFieldVal(fv) {
     const table = new albert.TextTable({
       id: "fieldVal",
-      "font-family": fontFieldVal,
+      "font-family": theme.fvFont,
       "font-style": "fill:" + theme.hdrColor + ";",
       fill: theme.hdrColor
     });
@@ -152,7 +152,7 @@ function generate(svg) {
     table
       .getColumn(0)
       .setAttributes({
-        "font-family": fontHex,
+        "font-family": theme.hexFont,
         "font-style": theme.hex + ";",
         fill: theme.hex
       })
@@ -162,7 +162,7 @@ function generate(svg) {
       .getColumn(2)
       .alignTo("left", "baseline")
       .setAttributes({
-        "font-family": fontHex,
+        "font-family": theme.hexFont,
         "xml:space": "preserve"
       });
     svg.constrain(table.constraints());
@@ -174,7 +174,7 @@ function generate(svg) {
   function makeHexline(hex, i) {
     const hexline = new albert.TextTable({
       id: "hex" + i,
-      "font-family": fontHex,
+      "font-family": theme.hexFont,
       "xml:space": "preserve",
       "font-style": "fill:" + theme.dimColor + ";",
       fill: theme.dimColor
@@ -199,7 +199,7 @@ function generate(svg) {
   function makeHeader(s, i) {
     const text = new albert.Text(s, {
       id: "hdrColor" + i,
-      "font-family": fontHeader,
+      "font-family": theme.hdrFont,
       "font-size": 1.5,
       "font-style": "fill:" + theme.hdrColor + ";",
       fill: theme.hdrColor
