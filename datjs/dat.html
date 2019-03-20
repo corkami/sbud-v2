@@ -196,7 +196,7 @@ const lsItem = "dat-theme";
 theme = Object.values(themes)[0];
 try {
   const themeId = localStorage.getItem(lsItem);
-  const newTheme = themes[themeId];
+  const newTheme = mergeDefaults(themes[themeId]);
   if (newTheme) theme = newTheme;
   
   Array.from(document.getElementById('theme').options)
@@ -206,7 +206,7 @@ try {
 
 document.getElementById('theme').addEventListener('change', (event) => {
   const newId = event.target.selectedOptions[0].value;
-  theme = themes[newId];
+  theme = mergeDefaults(themes[newId]);
   try {
     localStorage.setItem(lsItem, newId);
   } catch (e) {
