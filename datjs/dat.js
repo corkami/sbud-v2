@@ -147,7 +147,7 @@ function generate(svg) {
     });
     table.addRows(...fv);
 
-    table.setSpacing({ x: 0.5, y: 0 });
+    table.setSpacing({ x: 0.5, y: theme.hexYspace });
 
     table
       .getColumn(0)
@@ -181,7 +181,7 @@ function generate(svg) {
     });
     hexline.addRows(...hex);
 
-    hexline.setSpacing({ x: 0.5, y: 0 });
+    hexline.setSpacing({ x: 0.5, y: theme.hexYspace });
 
     hexline
       .getColumn(0)
