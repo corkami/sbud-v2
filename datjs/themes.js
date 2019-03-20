@@ -182,6 +182,7 @@ const tC64 = {
   hdrFont:"'Pet Me 64'",
   hexFont:"'Pet Me 64'",
   fvFont: "'Pet Me 64'",
+  hexYspace: .5,
   hexColor: "#0088FF",
   hdrColor: "#FFFFFF",
   bgColor:  "#0000AA",
@@ -211,6 +212,7 @@ const tDefault = {
   hdrFont:"'Aracne Regular', Arial",
   hexFont:"mononoki,Consolas,monospace",
   fvFont: "Arial",
+  hexYspace: 0,
 }
 
 function mergeDefaults(t) {
