@@ -141,8 +141,9 @@ Diff Removed      #FF000D81 red
 
 const tShadesOfPurple = {
   name:"Shades Of Purple",
+  hdrFont: 'Eurocorp',
   hexColor: "#A599E9",
-  hdrColor: "#B362FF", // Eurocorp ;)
+  hdrColor: "#B362FF",
   bgColor: "#2D2B55",
   dimColor: "#1E1E3F",
   valColors: [
@@ -178,7 +179,8 @@ White #FFFFFF
 
 const tC64 = {
   name:"Commodore 64",
-  // font: 'Pet Me 64'
+  hdrFont:'Pet Me 64',
+  hexFont:'Pet Me 64',
   hexColor: "#0088FF",
   hdrColor: "#0088FF",
   bgColor: "#0000AA",
