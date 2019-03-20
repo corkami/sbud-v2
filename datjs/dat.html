@@ -193,7 +193,7 @@ function refresh(){
 }
 
 const lsItem = "dat-theme";
-theme = Object.values(themes)[0];
+theme = mergeDefaults(Object.values(themes)[0]);
 try {
   const themeId = localStorage.getItem(lsItem);
   const newTheme = mergeDefaults(themes[themeId]);
