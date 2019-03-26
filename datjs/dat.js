@@ -322,9 +322,13 @@ function generate(svg) {
     align(headers[0].topEdge, svg.topEdge, 0.5)
   );
   for (var i = 1; i < fieldvals.length; i++) {
+    const biggestTable = maxBy(
+      [fieldvals[i - 1], hexlines[i - 1]],
+      table => table.getRowCount
+    );
     svg.constrain(
       eq(headers[i].leftEdge, headers[i - 1].leftEdge),
-      align(headers[i].topEdge, hexlines[i - 1].bottomEdge, 1)
+      align(headers[i].topEdge, biggestTable.bottomEdge, 1)
     );
   }
 
