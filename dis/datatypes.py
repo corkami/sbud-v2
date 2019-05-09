@@ -6,6 +6,7 @@ __all__ = [
   "Hex32",  # 01 02 03 04 -> "0x04030201"
   "Hex32b", # 01 02 03 04 -> "0x01020304"
   "U8",     # 0A          -> "10"
+  "U16",    # 01 02       -> "513"
   "U32",    # 01 02 03 04 -> "67305985"
   "U32b",   # 01 02 03 04 -> "16909060"
   "Bitmask8",
@@ -131,6 +132,18 @@ class U32b(BaseType):
     self.raw = struct.unpack(">L", contents[offset:offset + self.size])[0]
     self.value = "%i" % self.raw
     self.src = "ddbe %s" % self.value
+
+
+
+class U16(BaseType):
+  """unsigned 16b number, little endian, as decimal: 01 02 -> "513" """
+
+  def read(self, contents, offset):
+    self.offset = offset
+    self.size = 2
+    self.raw = struct.unpack("<H", contents[offset:offset + self.size])[0]
+    self.value = "%i" % self.raw
+    self.src = "dw %s" % self.value
 
 
 

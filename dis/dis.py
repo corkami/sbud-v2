@@ -61,7 +61,8 @@ if __name__ == "__main__":
   fileInfo = FileInfo(contents, fileName)
 
   parsers = [
-    png.PNGparser
+    png.PNGparser,
+    gif.GIFparser
   ]
 
   for parser in parsers:
@@ -115,8 +116,8 @@ if __name__ == "__main__":
         with open("launch.htm", "wb") as dummy:
          dummy.write("""<html>
             <title>DatJS launcher</title>
-            <script type='text/javascript'>location='../../datjs/dat.html#{json}'</script>
             <script type='text/javascript'>location='../datjs/dat.html#{json}'</script>
+            <script type='text/javascript'>location='../../datjs/dat.html#{json}'</script>
           </html>
           """ .format (json=
             urllib.quote(json.dumps(fileInfo,cls=sbudEncoder)))
