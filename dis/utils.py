@@ -57,25 +57,25 @@ def asmDir(symbols="symbols.map"):
 def strToASM(s):
   """returns a string definition handling all escapes and octal/hex characters"""
   ESCAPE = {
-    "\\":"\\\\",
-    "`":"\\`",
-    # "'":"\\'"  # not needed since we use backquote to enable escaping
-    # '"':'\\"',
-    # "?":"\\?",
-    "\x07":"\\a", # BEL
-    "\x08":"\\b", # BS
-    "\x09":"\\t", # TAB
-    "\x0A":"\\n", # LF
-    "\x0B":"\\v", # VT
-    "\x0C":"\\f", # FF
-    "\x0D":"\\r", # CR
+    b"\\":b"\\\\",
+    b"`" :b"\\`",
+    # b"'":"\\'"  # not needed since we use backquote to enable escaping
+    # b'"':'\\"',
+    # b"?":"\\?",
+    b"\x07":b"\a", # BEL
+    b"\x08":b"\b", # BS
+    b"\x09":b"\t", # TAB
+    b"\x0A":b"\n", # LF
+    b"\x0B":b"\v", # VT
+    b"\x0C":b"\f", # FF
+    b"\x0D":b"\r", # CR
     # no Ctrl-Z / \x1A :(
-    "\x1B":"\\e", # ESC
+    b"\x1B":b"\e", # ESC
   }
 
   l = []
-  for c in s:
-    v = ord(c)
+  for v in s:
+    c = bytes([v])
     if c in ESCAPE:
       l.append(ESCAPE[c])
       continue
@@ -85,12 +85,12 @@ def strToASM(s):
       continue
 
     if v < 8:
-      l.append("\\%x" % v)
+      l.append(b"\\%x" % v)
       continue
 
-    l.append("\\x%02x" % v)
-
-  return "".join(l)
+    l.append(b"\\x%02x" % v)
+  r = b"".join(l)
+  return r
 
 
 
@@ -139,7 +139,7 @@ def declareStruc(struc_, values):
 def status(offset, var=None):
   info = ""
   if var is not None:
-    info = "name: '%s', size: '%i', value: '%s'" % (var.name, var.size, `var`)
+    info = "name: '%s', size: '%i', value: '%s'" % (var.name, var.size, repr(var))
     # TODO: TBC
     offset -= var.size
 
@@ -150,7 +150,7 @@ def status(offset, var=None):
 def lineStd(depth, var, NoneVarLoc=0):
   dec = depth*" " if NoneVarLoc != 2 else (depth-1)*" " + "."
   if NoneVarLoc >= 1:
-    dec += var.name.translate(None,"\"'(){}<>-#_.") + " "
+    dec += var.name.translate(str.maketrans("", "", "\"'(){}<>-#_.")) + " "
   dec += var.src
   dec = dec.ljust(ROWNAMES, " ")
   
@@ -200,7 +200,7 @@ class Structure:
     self.jsonFilter = ["name", "offset", "subEls", "type", "size"]
   
   def __repr__(self):
-    return "%s %s" % (self.name, `self.subEls`)
+    return "%s %s" % (self.name, repr(self.subEls))
 
 
 #TODO: put in separate class
@@ -231,7 +231,7 @@ class Source:
     # append lines (single string or list) of code to specified offset
     self.initEntry(offset)
     l = self.d[offset][listName]
-    if isinstance(lineOrlist, basestring):
+    if isinstance(lineOrlist, str):
       l.append(lineOrlist)
     elif isinstance(lineOrlist, list):
       l.extend(lineOrlist)
@@ -240,7 +240,7 @@ class Source:
     # prepend lines but keep marker at original position (assumed it's for a comment)
     self.initEntry(offset)
     l = self.d[offset][listName]
-    if isinstance(lineOrlist, basestring):
+    if isinstance(lineOrlist, str):
       l.insert(0, lineOrlist)
     elif isinstance(lineOrlist, list):
       l[:0] = lineOrlist
@@ -308,10 +308,10 @@ def showBytes(source, contents, sizeThreshold=2, sameLine=True, preLines=0, post
     length = d["length"]
     if length > 0:
       if length <= (2*borders+2) :
-        s += " %s" % (" ".join("{nibble:02x}".format(nibble=ord(c)) for c in contents[offset:offset + length]))
+        s += " %s" % (" ".join("{nibble:02x}".format(nibble=c) for c in contents[offset:offset + length]))
       else:
-        s += " %s ..... %s" % (" ".join("{nibble:02x}".format(nibble=ord(c)) for c in contents[offset:offset + borders]),
-          " ".join("{nibble:02x}".format(nibble=ord(c)) for c in contents[offset + length - borders:offset + length])
+        s += " %s ..... %s" % (" ".join("{nibble:02x}".format(nibble=c) for c in contents[offset:offset + borders]),
+          " ".join("{nibble:02x}".format(nibble=c) for c in contents[offset + length - borders:offset + length])
           )
     
     if length > sizeThreshold:

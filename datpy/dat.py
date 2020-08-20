@@ -18,32 +18,36 @@ import re
 import datutils
 from ansi import *
 
-def Hexii(c):
-  """returns a string definition handling all escapes and octal/hex characters"""
-  ESCAPE = {
-    "\\":"\\\\",
-    "`":"\\`",
-    # "'":"\\'"  # not needed since we use backquote to enable escaping
-    # '"':'\\"',
-    # "?":"\\?",
-    "\x07":"\\a", # BEL
-    "\x08":"\\b", # BS
-    "\x09":"\\t", # TAB
-    "\x0A":"\\n", # LF
-    "\x0B":"\\v", # VT
-    "\x0C":"\\f", # FF
-    "\x0D":"\\r", # CR
-    # no Ctrl-Z / \x1A :(
-    "\x1B":"\\e", # ESC
-  }
 
+def Hexii(v):
+  """returns a string definition handling all escapes and octal/hex characters
+  from a byte"""
+  ESCAPE = {
+    b"\\"  :"\\\\",
+    b"`"   :"\\`",
+    # b"'" :"\\'"  # not needed since we use backquote to enable escaping
+    # b'"' :'\\"',
+    # b"?" :"\\?",
+    b"\x07":"\\a", # BEL
+    b"\x08":"\\b", # BS
+    b"\x09":"\\t", # TAB
+    b"\x0A":"\\n", # LF
+    b"\x0B":"\\v", # VT
+    b"\x0C":"\\f", # FF
+    b"\x0D":"\\r", # CR
+
+#    b"\x1A":"^Z", # Ctrl-Z
+    b"\x1B":"\\e", # ESC
+  }
+  c = bytes([v])
   if c in ESCAPE:
     return (ESCAPE[c])
 
-  v = ord(c)
+  # printable ASCII
   if v >= ord(' ') and v <= ord('~'):
-    return "." + c
+    return "." + chr(v)
 
+  # octal short
   if v < 8:
     return "\\%x" % v
 
@@ -52,12 +56,15 @@ def Hexii(c):
 
 def mixedHex(content, strucOffset, lineOffset, lineLength, indexes):
   l = []
-  for i, c in enumerate(content[lineOffset: lineOffset + lineLength]):
+  _content = content[lineOffset: lineOffset + lineLength]
+  for i, c in enumerate(_content):
     if i+lineOffset-strucOffset in indexes:
       l.append(Hexii(c))
     else:
-      l.append("%02X" % ord(c))
-  return " ".join(l)
+      l.append("%02X" % c)
+  r = " ".join(l)
+  return r
+
 
 def getSizeIdx(struc, subEls, offset):
   indexes = set()
@@ -65,10 +72,10 @@ def getSizeIdx(struc, subEls, offset):
     size = 0
     for el in subEls:
       if el["offset"] < offset:
-        print "OMG, wrong offset", el
+        print("OMG, wrong offset", el)
       # are empty leaves OK ?
       if el["size"] == 0:
-        print "OMG, empty offset", el
+        print("OMG, empty offset", el)
 
       # collect nibbles to be printed as HexII
       size = max(size, el["offset"] - offset + el["size"])
@@ -91,6 +98,7 @@ def mergeBlocks(left, right, spacing=3, width=None):
     for i in range(len(left), len(right)):
       out.append((width + spacing)*" " + right[i])
   return out
+
 
 def outputEls(content, theme, struc, leaves, depth):
   name, type_, offset = struc["name"], struc["type"], struc["offset"]
@@ -120,13 +128,22 @@ def outputEls(content, theme, struc, leaves, depth):
   fieldVals = []
   for i, el in enumerate(sorted(leaves, key=lambda x:int(x["offset"]))):
     color = theme.highlights[i % len(theme.highlights)]
-    fieldVals.append([fg("+%02x" % (el["offset"] - offset), theme.hex), fg(el["name"], color), fg(el["value"], color)])
+    fieldVals.append([
+      fg("+%02x" % (el["offset"] - offset), theme.hex),
+      fg(el["name"], color),
+      fg(repr(el["value"])[1:-1].replace("\\\\", "\\"), # FIXME - used to keep correct escaping?
+        color)
+      ])
 
     lineOffset = el["offset"] - el["offset"] % 16
     lines[lineOffset].fg((el["offset"] - lineOffset)*3, (el["offset"]+el["size"] - lineOffset)*3 - 1, color, default=theme.dimmed)
     lines[lineOffset].openTag(0, theme.dimmed)
     if (el["offset"] % 16)+el["size"] > 16:
-      lines[lineOffset+16].fg(0, (el["offset"]+el["size"]-16 - lineOffset)*3 - 2, color)
+      lines[lineOffset+16].fg(
+        0,
+        (el["offset"]+el["size"]-16 - lineOffset)*3 - 2,
+        color
+      )
 
   width = max(rawLen(x[1]) for x in fieldVals)
 
@@ -145,7 +162,7 @@ def outputEls(content, theme, struc, leaves, depth):
       depth = fg(" / ", bBlack).join(depth)
       ) + " "
 
-    l += `lines[i]`
+    l += repr(lines[i])
     HexBlock.append(l)
 
   
@@ -156,20 +173,20 @@ def outputEls(content, theme, struc, leaves, depth):
   #OPTIONAL - low nibbles lines below hex values
   HexBlock.append(lowNibbles)
   
-  print `sStructure` + " (%X+%X)" % (offset, size)
+  print(repr(sStructure) + " (%X+%X)" % (offset, size))
   #OPTIONAL: low nibbles line above hex values
   #print lowNibbles
 
   bVertical = True
   bVertical = False
   if bVertical:
-    print "\n".join(HexBlock)
-    print
-    print "\n".join(mergeBlocks([" "], lFieldVals, spacing=offsetLen))
-    print
+    print("\n".join(HexBlock))
+    print()
+    print("\n".join(mergeBlocks([" "], lFieldVals, spacing=offsetLen)))
+    print()
   else:
     # Horizontal
-    print "\n".join(mergeBlocks(HexBlock, lFieldVals, spacing=4))
+    print("\n".join(mergeBlocks(HexBlock, lFieldVals, spacing=4)))
 
 
 def outputStruc(content, theme, struc, depth=[]):
@@ -183,7 +200,7 @@ def outputStruc(content, theme, struc, depth=[]):
       leaves.append(el)
   if leaves:
     outputEls(content, theme, struc, leaves, depth)
-  print
+  print()
   for substruc in substrucs:
     outputStruc(content, theme, substruc, depth + [struc["type"]])
 
@@ -203,7 +220,7 @@ if __name__ == "__main__":
     "SHA1:   " + hashlib.sha1(contents).hexdigest().lower(),
     "SHA256: " + hashlib.sha256(contents).hexdigest().lower(), # Pfeww, just below 80 columns :p
   ]
-  print "\n".join(header)
-  print
+  print("\n".join(header))
+  print()
   struc = myJson["struc"]
   outputStruc(contents, datutils.THEMES[theme], struc, [])

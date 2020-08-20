@@ -17,7 +17,7 @@ from datatypes import *
 import os.path
 from os import system
 import datatypes
-import urllib
+import urllib.parse
 
 from parsers import *
 
@@ -33,6 +33,8 @@ class sbudEncoder(json.JSONEncoder):
       return {k: self.default(obj.__dict__[k]) for k in (obj.jsonFilter) if k in obj.__dict__}
     elif isinstance(obj, (str, int, dict, bool)):
       return obj
+    elif isinstance(obj, (bytes)):
+      return obj.decode()
     elif isinstance(obj, (list)):
       return [self.default(k) for k in obj]
     else:
@@ -102,28 +104,28 @@ if __name__ == "__main__":
 
 
       if args.asm is None:
-        print text
+        print(text)
       else:
-        with open(args.asm, "wb") as asmFile:
+        with open(args.asm, "w") as asmFile:
           asmFile.write(text)
 
       if args.json is not None:
-        with open(args.json, "wb") as jsonFile:
+        with open(args.json, "w") as jsonFile:
           json.dump(fileInfo, jsonFile, sort_keys=True, indent=1, cls=sbudEncoder)
 
         # haven't found yet a better way to launch a local file
         # no matter the browser settings with hash parameters :(
-        with open("launch.htm", "wb") as dummy:
+        with open("launch.htm", "w") as dummy:
          dummy.write("""<html>
             <title>DatJS launcher</title>
             <script type='text/javascript'>location='../datjs/dat.html#{json}'</script>
             <script type='text/javascript'>location='../../datjs/dat.html#{json}'</script>
           </html>
           """ .format (json=
-            urllib.quote(json.dumps(fileInfo,cls=sbudEncoder)))
+            urllib.parse.quote(json.dumps(fileInfo,cls=sbudEncoder)))
           )
             
-        system("launch.htm")
+        # system("launch.htm")
       break
   else:
-    print "no format recognized"
+    print("no format recognized")

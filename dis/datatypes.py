@@ -41,7 +41,7 @@ class BaseType:
 
   def __repr__(self):
     #TODO: remove this?
-    return self.value
+    return self.value.decode()
 
   def read(self, contents, offset):
     pass
@@ -164,7 +164,7 @@ class Bitmask8(BaseType):
     lValue = []
     lSrc = []
 
-    for value, name in self.members.iteritems():
+    for value, name in self.members.items():
       if leftover & value:
         leftover ^= value
         lValue.append(name)
@@ -263,7 +263,8 @@ class String(BaseType):
     self.offset = offset
     self.raw = struct.unpack("%is" % self.size, contents[offset:offset + self.size])[0]
     self.value = strToASM(self.raw)
-    self.src = "db `%s`" % self.value
+    # remove the b'' extra characters
+    self.src = "db `%s`" % repr(self.value)[2:-1].replace("\\\\", "\\") # FIXME
 
 
 class Blob(BaseType):
@@ -275,7 +276,7 @@ class Blob(BaseType):
     self.offset = offset
     self.raw = contents[offset:offset + self.size]
     # incbin <file>, offset, length
-    self.value = "%s" % (", ".join("0x%02x" % ord(c) for c in self.raw))
+    self.value = "%s" % (", ".join("0x%02x" % c for c in self.raw))
     self.src = "db %s" % self.value
 
 
@@ -283,13 +284,13 @@ class Blob(BaseType):
 #TODO: refresh tests
 def test():
   def dump(l):
-    print l.raw
-    print `l`
-    print `l.src`
+    print(l.raw)
+    print(repr(l))
+    print(repr(l.src))
 
   s = "\1\2\3\4\5\6\7\8"
 
-  print "datatypes test succeeded :p"
+  print("datatypes test succeeded :p")
 
 
 if __name__ == "__main__":

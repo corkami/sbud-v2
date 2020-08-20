@@ -30,7 +30,7 @@ def skipSubBlocks(contents, offset):
 class GIFparser(Parser):
 
   def is_file(self, contents):
-    return contents.startswith("GIF") and (contents[3:6] in ["87a", "89a"])
+    return contents.startswith(b"GIF") and (contents[3:6] in [b"87a", b"89a"])
 
   def run(self, contents, fn):
     defs = {}
@@ -70,7 +70,7 @@ class GIFparser(Parser):
       depth += 1
       separator = String("Separator", 1, "separator")
       separator.read(contents, offset)
-      if (separator.raw == "!"): # extension
+      if (separator.raw == b"!"): # extension
         extension = Structure("Extension", offset, "extension")
         offset += 1
         extension.subEls.append(separator)
@@ -79,7 +79,7 @@ class GIFparser(Parser):
         #TODO: incbin
         fileStruc.subEls.append(extension)
         depth -= 1
-      elif (separator.raw == ","):
+      elif (separator.raw == b","):
         lsd = Structure("Image Descriptor", offset, "Isd")
         offset += 1
         lsd.subEls.append(separator)
@@ -101,7 +101,7 @@ class GIFparser(Parser):
         #TODO: incbin
         fileStruc.subEls.append(lsd)
         depth -= 1
-      elif (separator.raw == ";"):
+      elif (separator.raw == b";"):
         term = Structure("Terminator", offset, "separator")
         offset += 1
         term.subEls.append(separator)

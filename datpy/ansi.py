@@ -102,7 +102,7 @@ class AnsiStr:
     return output
 
   def ljust(self, width):
-    return `self` + (width - len(self.text)) * " "
+    return repr(self) + (width - len(self.text)) * " "
 
 
 def rawText(s):

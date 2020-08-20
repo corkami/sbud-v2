@@ -10,7 +10,7 @@ from datatypes import *
 class PNGparser(Parser):
 
   def is_file(self, contents):
-    return contents.startswith("\x89PNG\r\n\x1a\n")
+    return contents.startswith(b"\x89PNG\r\n\x1a\n")
 
   def run(self, contents, fn):
     defs = {}
@@ -42,10 +42,10 @@ class PNGparser(Parser):
     idatCount = 0
 
     CHUNK_TYPES = {
-      "IHDR":"Image Header",
-      "IDAT":"Image Data",
-      "PLTE":"Palette",
-      "IEND":"Image End",
+      b"IHDR":"Image Header",
+      b"IDAT":"Image Data",
+      b"PLTE":"Palette",
+      b"IEND":"Image End",
     }
 
     chunkCount = 0
@@ -88,7 +88,7 @@ class PNGparser(Parser):
         blobLen = length.raw
         source.set(offset,
           src=(depth * " " + "incbin {FileName}, 0x{offset:x}, 0x{length:x}".format(
-            FileName=`fn`, 
+            FileName=repr(fn), 
             offset=data.offset,
             length=blobLen,
           )),
@@ -113,7 +113,7 @@ class PNGparser(Parser):
 
       fileStruc.subEls.append(chunk)
       #TODO: better logic?
-      if `type_` == "IEND":
+      if repr(type_) == b"IEND":
         break
     # source.src(offset, ["; END ".ljust(ROWNAMES, '"'), "", ])
 
