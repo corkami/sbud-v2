@@ -1,3 +1,9 @@
+Sbud is being rewritten from scratch, in private for now.
+
+This repository will be rebuild from scratch in the future.
+For the time being, consider it as an obsolete stepping stone.
+
+
 # SBuD
 
 SBuD is an **experimental playground** related to file formats parsing and visualization.
